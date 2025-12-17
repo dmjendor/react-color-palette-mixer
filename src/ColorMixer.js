@@ -1,10 +1,11 @@
 import { useState } from "react";
 
-export default function ColorMixer({ color, onColorChange }) {
+export default function ColorMixer({ color, onColorChange, onHexConvert }) {
   const [red, setRed] = useState(0);
   const [blue, setBlue] = useState(0);
   const [green, setGreen] = useState(0);
   const [colorStyle, setColorStyle] = useState("rgb(0, 0, 0)");
+  const [colorHex, setColorHex] = useState("#000000");
   function handleRed(e) {
     const value = Number(e.target.value);
     setRed(value);
@@ -23,6 +24,7 @@ export default function ColorMixer({ color, onColorChange }) {
   function updateColor(color) {
     setColorStyle(`rgb(${red}, ${green}, ${blue})`);
     onColorChange({ r: red, g: green, b: blue });
+    setColorHex(onHexConvert(red, green, blue));
   }
   return (
     <div className="sliders">
@@ -65,7 +67,9 @@ export default function ColorMixer({ color, onColorChange }) {
         className="sliderRow sliderRowPreview"
         style={{ backgroundColor: colorStyle }}
       >
-        <span className="colorLabel">{colorStyle}</span>
+        <span className="colorLabel">
+          {colorStyle} - Hex: {colorHex}
+        </span>
       </div>
     </div>
   );

@@ -5,6 +5,20 @@ export default function App() {
   const [color1, setColor1] = useState({ r: 0, g: 0, b: 0 });
   const [color2, setColor2] = useState({ r: 0, g: 0, b: 0 });
   const [color3, setColor3] = useState("rgb(0,0,0)");
+  const [color3Hex, setColor3Hex] = useState("#000000");
+
+  function handleRGBToHex(r, g, b) {
+    return (
+      "#" +
+      [r, g, b]
+        .map((value) => {
+          const hex = value.toString(16);
+          return hex.length === 1 ? "0" + hex : hex;
+        })
+        .join("")
+    );
+  }
+
   function handleColor1(color) {
     setColor1(color);
   }
@@ -13,11 +27,12 @@ export default function App() {
   }
 
   function handleColorMix() {
-    setColor3(
-      `rgb(${Math.round((color1.r + color2.r) / 2)},${Math.round(
-        (color1.g + color2.g) / 2
-      )},${Math.round((color1.b + color2.b) / 2)})`
-    );
+    const red = Math.round((color1.r + color2.r) / 2);
+    const green = Math.round((color1.g + color2.g) / 2);
+    const blue = Math.round((color1.b + color2.b) / 2);
+    setColor3(`rgb(${red},${green},${blue})`);
+
+    setColor3Hex(handleRGBToHex(red, green, blue));
   }
 
   return (
@@ -29,7 +44,11 @@ export default function App() {
       <div className="mixerGrid">
         <section className="panel">
           <h2 className="panelTitle">Color 1</h2>
-          <ColorMixer color={color1} onColorChange={handleColor1} />
+          <ColorMixer
+            color={color1}
+            onColorChange={handleColor1}
+            onHexConvert={handleRGBToHex}
+          />
         </section>
         <section className="panel previewPanel">
           <h2 className="panelTitle">Mixed Color</h2>
@@ -42,7 +61,11 @@ export default function App() {
           </div>
 
           <div className="previewMeta">
-            <div className="colorReadout">{color3}</div>
+            <div className="colorReadout">
+              <p>
+                {color3} - Hex: {color3Hex}
+              </p>
+            </div>
             <button className="mixButton" onClick={handleColorMix}>
               Mix
             </button>
@@ -50,7 +73,11 @@ export default function App() {
         </section>
         <section className="panel">
           <h2 className="panelTitle">Color 2</h2>
-          <ColorMixer color={color2} onColorChange={handleColor2} />
+          <ColorMixer
+            color={color2}
+            onColorChange={handleColor2}
+            onHexConvert={handleRGBToHex}
+          />
         </section>
       </div>
     </div>
